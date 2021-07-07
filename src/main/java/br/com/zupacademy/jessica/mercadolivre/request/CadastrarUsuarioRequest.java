@@ -1,6 +1,7 @@
 package br.com.zupacademy.jessica.mercadolivre.request;
 
 import br.com.zupacademy.jessica.mercadolivre.model.Usuario;
+import br.com.zupacademy.jessica.mercadolivre.request.validator.MustBeUnique;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -10,7 +11,7 @@ public class CadastrarUsuarioRequest {
 
     @Email
     @NotBlank
-    //unico
+    @MustBeUnique(domainClass = Usuario.class, fieldName ="login", message = "email já cadastrado")
     private String login;
 
     @NotBlank
