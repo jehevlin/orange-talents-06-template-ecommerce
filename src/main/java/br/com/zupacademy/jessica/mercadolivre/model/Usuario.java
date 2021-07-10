@@ -38,6 +38,10 @@ public class Usuario {
     public String getLogin() {
         return login;
     }
+
+    public String getSenha() {
+        return senha;
+    }
 }
 
 //Resultado esperado
