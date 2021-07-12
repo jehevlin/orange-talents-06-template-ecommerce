@@ -25,4 +25,12 @@ public class Categoria {
         this.nome = nome;
         this.categoriaMae = categoriaMae;
     }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
 }

@@ -20,8 +20,6 @@ public class Usuario {
 
     @NotBlank
     @Size(min = 6)
-    //@Length(min = 6) ?
-    //A senha deve ser guardada usando algum algoritmo de hash da sua escolha.
     private String senha;
 
     @NotNull
@@ -43,8 +41,3 @@ public class Usuario {
         return senha;
     }
 }
-
-//Resultado esperado
-//O usuário precisa estar criado no sistema
-//O cliente que fez a requisição precisa saber que o usuário foi criado. Apenas um retorno com status 200 está suficente.
-//Em caso de falha de validação status 400
