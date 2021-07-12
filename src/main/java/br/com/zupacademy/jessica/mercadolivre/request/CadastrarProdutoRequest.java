@@ -3,6 +3,7 @@ package br.com.zupacademy.jessica.mercadolivre.request;
 import br.com.zupacademy.jessica.mercadolivre.model.Caracteristica;
 import br.com.zupacademy.jessica.mercadolivre.model.Categoria;
 import br.com.zupacademy.jessica.mercadolivre.model.Produto;
+import br.com.zupacademy.jessica.mercadolivre.model.Usuario;
 
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -42,12 +43,14 @@ public class CadastrarProdutoRequest {
 
     private final LocalDateTime instanteCadastro = LocalDateTime.now();
 
-    public Produto toModel() {
+    public Produto toModel(String login) {
         Set<Caracteristica> caracteristicasModel = caracteristicas.stream()
                 .map(c -> c.toModel())
                 .collect(Collectors.toSet());
 
-        return new Produto(nome, valor, quantidade, caracteristicasModel, descricao, categoria);
+        Usuario usuario = new Usuario(login);
+
+        return new Produto(nome, valor, quantidade, caracteristicasModel, descricao, categoria, usuario);
     }
 
     public String getNome() {

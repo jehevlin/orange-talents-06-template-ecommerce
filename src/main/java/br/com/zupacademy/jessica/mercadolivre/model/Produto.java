@@ -40,19 +40,27 @@ public class Produto {
     @ManyToOne
     private Categoria categoria;
 
+    @OneToMany(cascade = CascadeType.PERSIST)
+    private Set<Imagem> imagens;
+
+    @NotNull
+    @ManyToOne
+    private Usuario usuario;
+
     private final LocalDateTime instanteCadastro = LocalDateTime.now();
 
     @Deprecated
     public Produto() {
     }
 
-    public Produto(String nome, BigDecimal valor, int quantidade, Set<Caracteristica> caracteristicas, String descricao, Categoria categoria) {
+    public Produto(String nome, BigDecimal valor, int quantidade, Set<Caracteristica> caracteristicas, String descricao, Categoria categoria, Usuario usuario) {
         this.nome = nome;
         this.valor = valor;
         this.quantidade = quantidade;
         this.caracteristicas = caracteristicas;
         this.descricao = descricao;
         this.categoria = categoria;
+        this.usuario = usuario;
     }
 
     public long getId() {
@@ -85,5 +93,13 @@ public class Produto {
 
     public LocalDateTime getInstanteCadastro() {
         return instanteCadastro;
+    }
+
+    public Set<Imagem> getImagens() {
+        return imagens;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
     }
 }

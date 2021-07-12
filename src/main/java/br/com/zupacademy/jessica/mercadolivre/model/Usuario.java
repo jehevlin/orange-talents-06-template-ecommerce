@@ -28,6 +28,10 @@ public class Usuario {
     @Deprecated
     public Usuario() { }
 
+    public Usuario(String login) {
+        this.login = login;
+    }
+
     public Usuario(String login, String senha) {
         this.login = login;
         this.senha = new BCryptPasswordEncoder().encode(senha);
