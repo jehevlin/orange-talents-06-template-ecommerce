@@ -1,12 +1,17 @@
 package br.com.zupacademy.jessica.mercadolivre.controller;
 
+import br.com.zupacademy.jessica.mercadolivre.enviadorEmails.EnviarEmailParaVendedor;
 import br.com.zupacademy.jessica.mercadolivre.model.Imagem;
+import br.com.zupacademy.jessica.mercadolivre.model.Pergunta;
 import br.com.zupacademy.jessica.mercadolivre.model.Produto;
 import br.com.zupacademy.jessica.mercadolivre.repository.OpiniaoRepository;
+import br.com.zupacademy.jessica.mercadolivre.repository.PerguntaRepository;
 import br.com.zupacademy.jessica.mercadolivre.repository.ProdutoRepository;
 import br.com.zupacademy.jessica.mercadolivre.request.CadastrarImagemRequest;
 import br.com.zupacademy.jessica.mercadolivre.request.CadastrarOpiniaoRequest;
+import br.com.zupacademy.jessica.mercadolivre.request.CadastrarPerguntaRequest;
 import br.com.zupacademy.jessica.mercadolivre.request.CadastrarProdutoRequest;
+import br.com.zupacademy.jessica.mercadolivre.enviadorEmails.EnviadorEmail;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,9 +30,15 @@ public class ProdutoController {
 
     private final OpiniaoRepository opiniaoRepository;
 
-    public ProdutoController(ProdutoRepository produtoRepository, OpiniaoRepository opiniaoRepository) {
+    private final PerguntaRepository perguntaRepository;
+
+    private final EnviarEmailParaVendedor enviarEmailParaVendedor;
+
+    public ProdutoController(ProdutoRepository produtoRepository, OpiniaoRepository opiniaoRepository, PerguntaRepository perguntaRepository, EnviarEmailParaVendedor enviarEmailParaVendedor) {
         this.produtoRepository = produtoRepository;
         this.opiniaoRepository = opiniaoRepository;
+        this.perguntaRepository = perguntaRepository;
+        this.enviarEmailParaVendedor = enviarEmailParaVendedor;
     }
 
     @PostMapping
@@ -74,4 +85,22 @@ public class ProdutoController {
         opiniaoRepository.save(request.toModel(user.getUsername(), idProduto));
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping(path = "/{id}/pergunta")
+    public ResponseEntity<?>cadastrarPergunta(
+            @AuthenticationPrincipal User user,
+            @PathVariable(name = "id") long idProduto,
+            @Valid @RequestBody CadastrarPerguntaRequest request) {
+
+        Optional<Produto> buscaProduto = produtoRepository.findById(idProduto);
+        if (!buscaProduto.isPresent()) {
+            return new ResponseEntity<>("Produto com id " + idProduto + " não existe.", HttpStatus.NOT_FOUND);
+        }
+
+        Produto produto = buscaProduto.get();
+        Pergunta pergunta = perguntaRepository.save(request.toModel(user.getUsername(), idProduto));
+        enviarEmailParaVendedor.enviarPergunta(pergunta, produto.getUsuario().getLogin());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }
