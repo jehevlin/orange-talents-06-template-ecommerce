@@ -106,4 +106,8 @@ public class Produto {
     public Usuario getUsuario() {
         return usuario;
     }
+
+    public void atualizarEstoque(Compra compra) {
+        this.quantidade -= compra.getQuantidade();
+    }
 }
