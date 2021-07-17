@@ -39,6 +39,10 @@ public class Pergunta {
     public String getTitulo() {
         return titulo;
     }
+
+    public LocalDateTime getInstanteCriacao() {
+        return instanteCriacao;
+    }
 }
 
 //O vendedor recebe um email com a pergunta nova
