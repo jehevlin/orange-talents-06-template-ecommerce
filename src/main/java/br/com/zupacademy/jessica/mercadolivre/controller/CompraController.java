@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -43,7 +44,8 @@ public class CompraController {
     @PostMapping
     public ResponseEntity<?> cadastrarCompra(
             @AuthenticationPrincipal User user,
-            @Valid @RequestBody CadastrarCompraRequest request) throws Exception {
+            @Valid @RequestBody CadastrarCompraRequest request,
+            UriComponentsBuilder uriBuilder) throws Exception {
 
         if (!request.getGatewayPagamento().toLowerCase(Locale.ROOT).equals("paypal")
                 && !request.getGatewayPagamento().toLowerCase(Locale.ROOT).equals("pagseguro")) {
@@ -74,7 +76,7 @@ public class CompraController {
 
         emailParaVendedor.enviarCompra(compra);
 
-        String urlPagamento = gatewayPagamento.GerarUrlPagamento(compra);
+        String urlPagamento = gatewayPagamento.gerarUrlPagamento(compra, uriBuilder);
 
         return ResponseEntity
                 .status(HttpStatus.FOUND)

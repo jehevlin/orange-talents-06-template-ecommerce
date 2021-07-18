@@ -30,6 +30,9 @@ public class Compra {
     @ManyToOne
     private Usuario comprador;
 
+    @ManyToOne
+    private Transacao transacao;
+
     @NotBlank
     private String gatewayPagamento;
 
@@ -75,5 +78,20 @@ public class Compra {
 
     public String getStatus() {
         return status;
+    }
+
+    public Transacao getTransacao() {
+        return transacao;
+    }
+
+    public void atualizarStatusParaTransacao(Transacao transacao) {
+
+        this.transacao = transacao;
+
+        if (transacao.getStatus().equals("sucesso")) {
+            this.status = "PAGAMENTO_EFETUADO";
+        } else {
+            this.status = "FALHA_PAGAMENTO";
+        }
     }
 }

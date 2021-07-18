@@ -2,6 +2,7 @@ package br.com.zupacademy.jessica.mercadolivre.gatewayPagamento;
 
 import br.com.zupacademy.jessica.mercadolivre.model.Compra;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Locale;
 
@@ -16,7 +17,7 @@ public class GatewayPagamento implements GatewayPagamentoCompra {
         this.pagSeguroGateway = pagSeguroGateway;
     }
 
-    public String GerarUrlPagamento(Compra compra) throws Exception {
+    public String gerarUrlPagamento(Compra compra, UriComponentsBuilder uriBuilder) throws Exception {
 
         GatewayPagamentoCompra gateway;
 
@@ -34,6 +35,24 @@ public class GatewayPagamento implements GatewayPagamentoCompra {
                 throw new Exception("Gateway não suportado: " + compra.getGatewayPagamento());
         }
 
-        return gateway.GerarUrlPagamento(compra);
+        return gateway.gerarUrlPagamento(compra, uriBuilder);
+    }
+
+    public String recuperarStatus(String gateway, String status) throws Exception {
+        switch (gateway)
+        {
+            case "paypal":
+                if (status.equals("1"))
+                    return "sucesso";
+                return "erro";
+
+            case "pagseguro":
+                if (status.equals("SUCESSO"))
+                    return "sucesso";
+                return "erro";
+
+            default:
+                throw new Exception("Gateway não suportado: " + gateway);
+        }
     }
 }
